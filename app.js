@@ -3,7 +3,11 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 require('dotenv').config();
 
+const serverless = require('serverless-http');
+
 const app = express();
+
+const router = express.Router();
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
@@ -50,3 +54,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+
+app.use('/.netlify/functions/api', router);
+module.exports = app;
+module.exports.handler = serverless(app);
